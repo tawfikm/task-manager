@@ -5,6 +5,8 @@ import lu.lbr.task.entity.Task;
 import lu.lbr.task.exception.ResourceNotFoundException;
 import lu.lbr.task.mapper.TaskMapper;
 import lu.lbr.task.repository.TaskRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,10 @@ public class TaskService {
                 .collect(Collectors.toList());
     }
 
+    public Page<TaskDTO> getAllTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable)
+                .map(taskMapper::toDTO);
+    }
     public TaskDTO getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id " + id));
